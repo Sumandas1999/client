@@ -22,7 +22,7 @@ function App() {
         </Link>
         
       </header>
-      <main className="sm:p-8 px-4 py-8 w-full bg-[#5db4b3] min-h-[calc(100vh-75px)]">
+      <main className="sm:p-8 px-4 py-8 w-full bg-emerald-100 min-h-[calc(100vh-75px)]">
         <Routes>
           <Route   path="/"  element={ <Home/>}/>
 
