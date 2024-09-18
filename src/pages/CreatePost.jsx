@@ -4,6 +4,7 @@ import { preview } from "../assets";
 import { FormFilled, Loader } from "../components";
 import { getRandomPrompts } from "../utils";
 
+
 function CreatePost() {
   const navigate = useNavigate();
   const [forms, setForms] = useState({
@@ -14,14 +15,38 @@ function CreatePost() {
   const [generatingImg, setGeneratingImg] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const generateImage =()=>{
-setForms ({...forms, [e.target.name] : e.target.value})
+  const generateImage = async ()=>{
+     if (forms.prompt) {
+      try {
+        setGeneratingImg(true);
+        const response = await fetch ('http://localhost:8080/api/v1/reko',{
+          method: 'POST',
+          headers: {
+            "Content-Type" : "application/json",
+          },
+          body: JSON.stringify({prompt: forms.prompt})
+        })
+
+        const data = await response.json();
+        setForms ({ ...forms,photo:`data.image/jepeg; base64, $ {data.photo}`})
+      } catch (error) {
+        alert(error); 
+        
+      } finally{
+        setGeneratingImg(false)
+      }
+     } else {
+      alert('promt is emty bro ')
+     }
+
   }
 
   const handleSubmit = () => {
 
   }
-  const handleChange = (e) => {} 
+  const handleChange = (e) => {
+    setForms ({...forms, [e.target.name] : e.target.value})
+  } 
 
   const handleSurpriseMe = ()=> {
    const randomPrompts = getRandomPrompts(forms.prompt)
@@ -92,10 +117,23 @@ setForms ({...forms, [e.target.name] : e.target.value})
       className=" text-white px-52 py-2 bg-green-800 rounded-md"
       > 
       {generatingImg ? "Generating....." : "Generate"}
+      
+          </button>
+        </div>
 
-      </button>
+        <div className="mt-10">
+          <p className="mt-2 text-[#666e75] text-[14px]">** Once you have created the image you want, you can share it with others in the community **</p>
+          <button
+            type="submit"
+            className="mt-3 text-white bg-[#6469ff] font-medium rounded-md text-sm w-full sm:w-auto px-5 py-2.5 text-center"
+          >
+            {loading ? 'Sharing...' : 'Share with the Community'}
+          </button>
+     
       </div>
-       
+    
+ 
+
       </div>
       </form>
 
